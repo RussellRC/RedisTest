@@ -1,3 +1,11 @@
+# Maven 
+target
+
+# Eclipse files
+.classpath
+.project
+.settings
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
