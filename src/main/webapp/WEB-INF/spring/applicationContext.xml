@@ -36,9 +36,9 @@
         id="stringRedisSerializer"
         class="org.springframework.data.redis.serializer.StringRedisSerializer" />
         
-    <bean
+    <!-- <bean
         id="genericToStringSerializer"
-        class="org.springframework.data.redis.serializer.GenericToStringSerializer" />        
+        class="org.springframework.data.redis.serializer.GenericToStringSerializer" /> -->        
 
     <!-- redis template definition -->
     <bean

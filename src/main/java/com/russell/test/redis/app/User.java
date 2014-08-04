@@ -1,9 +1,8 @@
-package com.russell.test.redis.bo;
+package com.russell.test.redis.app;
 
 
 public interface User {
 
-    long getId();
     String getEmail();
     String getUsername();
     String getPassword();

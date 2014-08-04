@@ -8,8 +8,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Repository;
 
+import com.russell.test.redis.app.User;
 import com.russell.test.redis.bo.ServiceUser;
-import com.russell.test.redis.bo.User;
 import com.russell.test.redis.service.AppKey;
 
 import static com.russell.test.redis.service.AppKey.*;
@@ -32,22 +32,30 @@ public class UserRepositoryImpl {
         long userId = userIdCounter.incrementAndGet();
         user.setId(userId);
         
-        redisTemplate.opsForHash().put(USER.key, String.valueOf(userId), user);
-        stringRedisTemplate.opsForHash().put(USERS.key, user.getEmail(), String.valueOf(userId));
+        redisTemplate.opsForHash().put(AppKey.user(), String.valueOf(userId), user);
+        stringRedisTemplate.opsForHash().put(AppKey.users(), user.getEmail(), String.valueOf(userId));
     }
     
-    public User findByEmail(String email) {
-        String userId = (String) stringRedisTemplate.opsForHash().get(USERS.key, email);
+    public ServiceUser findByEmail(String email) {
+    	String userId = (String) stringRedisTemplate.opsForHash().get(AppKey.users(), email);
         return findById(userId);
     }
 
-    public User findById(String id) {
-        User user = (User) redisTemplate.opsForHash().get(USER.key, id);
+    public ServiceUser findById(String id) {
+    	ServiceUser user = (ServiceUser) redisTemplate.opsForHash().get(AppKey.user(), id);
         return user;
+    }
+    
+    public boolean auth(String email, String password) {
+    	User user = findByEmail(email);
+    	if (user == null) {
+    		return false;
+    	}
+    	
+    	return user.getPassword().equals(password);
     }
 
     public void saveFollowing(String userId, String targetUserId) {
-        stringRedisTemplate.opsForZSet().add(AppKey.following(userId), targetUserId, System.currentTimeMillis());
-        
+        stringRedisTemplate.opsForZSet().add(AppKey.following(userId), targetUserId, System.currentTimeMillis());        
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.util.Assert;
 
-import com.russell.test.redis.bo.User;
+import com.russell.test.redis.bo.ServiceUser;
 import com.russell.test.redis.bo.UserImpl;
 import com.russell.test.redis.service.HelloService;
 import com.russell.test.redis.service.TService;
@@ -44,15 +44,15 @@ public class App {
         user.setPassword("secret");
         user.setUsername("Krad");
         
-        TService service = ctx.getBean("userService", TService.class);
+        TService service = ctx.getBean(TService.class);
         service.save(user);
         
         System.out.println("user saved successfully");
     }
     
     public void getUser() {
-        TService service = ctx.getBean("userService", TService.class);
-        User user = service.findByEmail("russellrc@gmail.com");
+        TService service = ctx.getBean(TService.class);
+        ServiceUser user = service.findByEmail("russellrc@gmail.com");
         
         String str = new ToStringBuilder(user, ToStringStyle.SHORT_PREFIX_STYLE).append("id", user.getId()).append("username", user.getUsername())
                                               .append("email", user.getEmail()).append("password", user.getPassword())

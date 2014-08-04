@@ -5,7 +5,6 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.russell.test.redis.bo.ServiceUser;
-import com.russell.test.redis.bo.User;
 import com.russell.test.redis.dao.UserRepositoryImpl;
 
 @Service
@@ -20,12 +19,12 @@ public class TServiceImpl implements TService {
     }
 
     @Override
-    public User findById(String id) {
+    public ServiceUser findById(String id) {
         return userRepository.findById(id);
     }
 
     @Override
-    public User findByEmail(String email) {
+    public ServiceUser findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 

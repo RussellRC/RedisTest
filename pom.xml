@@ -8,7 +8,19 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>Redis Cache Test</name>
 
+    <packaging>war</packaging>
+
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>4.0.6.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>4.0.6.RELEASE</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
@@ -47,6 +59,21 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.1</version>
+        </dependency>
+        
+        <dependency>
+            <!-- This one is part of javaee-api (provided by the EE server), 
+                but because Tomcat doesn't come with it we need to 'explicitly' include it 
+                in WEB-INF/lib -->
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>6.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

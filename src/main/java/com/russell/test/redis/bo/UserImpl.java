@@ -12,7 +12,6 @@ public class UserImpl implements ServiceUser, Serializable {
     private String username;
     private String password;
     
-    @Override
     public long getId() {
         return id;
     }

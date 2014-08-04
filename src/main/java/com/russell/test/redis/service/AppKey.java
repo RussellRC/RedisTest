@@ -6,9 +6,9 @@ public enum AppKey {
     /** global:next_userId */
     GLOBAL_NEXT_USERID("global:next_userId"),
     /** user */
-    USER("user"),
+    USER("user:"),
     /** users */
-    USERS(" "),
+    USERS("users"),
     /** following: */
     FOLLOWING("following:");
     
@@ -20,11 +20,20 @@ public enum AppKey {
         this.key = key;
     }
     
-    public static String following(String userId) {
-        return getKey(FOLLOWING, userId);
-    }
-
-    private static String getKey(AppKey appKey, String id) {
+    private static String formatKey(AppKey appKey, String id) {
         return String.format(keyPattern, appKey.key, id);
     }
+
+	public static String user() {
+		return USER.key;
+	}
+    
+    public static String following(String userId) {
+        return formatKey(FOLLOWING, userId);
+    }
+
+	public static String users() {
+		return USERS.key;
+	}
+
 }
