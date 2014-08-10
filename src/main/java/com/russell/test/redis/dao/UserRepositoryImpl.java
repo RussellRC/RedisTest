@@ -8,11 +8,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Repository;
 
+import com.russell.test.redis.app.AppKey;
 import com.russell.test.redis.app.User;
 import com.russell.test.redis.bo.ServiceUser;
-import com.russell.test.redis.service.AppKey;
 
-import static com.russell.test.redis.service.AppKey.*;
+import static com.russell.test.redis.app.AppKey.*;
 
 @Repository
 public class UserRepositoryImpl {

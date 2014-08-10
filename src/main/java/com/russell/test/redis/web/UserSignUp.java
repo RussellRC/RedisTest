@@ -1,10 +1,13 @@
 package com.russell.test.redis.web;
 
+import org.hibernate.validator.constraints.Email;
+
 import com.russell.test.redis.app.User;
 
 public class UserSignUp implements User {
-
-	private String email;
+    
+    @Email
+	private String email;  
 	private String username;
 	private String password;
 	private String password2;
