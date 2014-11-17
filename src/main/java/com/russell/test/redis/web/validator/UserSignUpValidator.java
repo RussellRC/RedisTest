@@ -5,7 +5,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.russell.test.redis.web.UserSignUp;
+import com.russell.test.redis.web.form.UserSignUp;
 
 
 public class UserSignUpValidator implements Validator {

@@ -1,35 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-    xmlns:c="http://www.springframework.org/schema/c" xmlns:context="http://www.springframework.org/schema/context"
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns:context="http://www.springframework.org/schema/context"
     xmlns:cache="http://www.springframework.org/schema/cache"
     xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:security="http://www.springframework.org/schema/security"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
-                        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+                        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
     <context:component-scan base-package="com.russell.test.redis.web" />
     
-    <bean id="messageSource"
+    <!-- Forwards requests to the "/" resource to the "welcome" view -->
+   <!--  <mvc:view-controller path="/" view-name="/login"/> -->
+    
+    <!--
+    Important for @Secured annotations to work.
+    Here we enable all three of them - @Secured, @PreAuthorize and @RolesAllowed. You may choose what you use.
+    Check MainRestController for examples.
+     -->
+    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled" jsr250-annotations="enabled"/>
+
+    <bean
+        id="messageSource"
         class="org.springframework.context.support.ResourceBundleMessageSource"
         p:basename="messages" />
 
     <bean
         class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-        p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
-
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+        p:prefix="/WEB-INF/jsp/"
+        p:suffix=".jsp" />
     
+    <!-- Central class for JSR303 Validation -->
     <bean
-    class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-    <property name="webBindingInitializer">
-        <!-- Configures Spring MVC DataBinder instances -->
-        <bean
-            class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
-            <property name="validator" ref="validator" />
-        </bean>
-    </property>
-</bean>
+        id="validator"
+        class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
     
+    <!-- Add JSR303 Validator to Spring's DataBinder validator -->
+    <bean
+        class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="webBindingInitializer">
+            <bean
+                class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer"
+                p:validator-ref="validator" />
+        </property>
+    </bean>
+
 </beans>

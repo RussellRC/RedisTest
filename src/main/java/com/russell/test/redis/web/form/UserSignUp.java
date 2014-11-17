@@ -1,12 +1,16 @@
-package com.russell.test.redis.web;
+package com.russell.test.redis.web.form;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.Email;
 
 import com.russell.test.redis.app.User;
+import com.russell.test.redis.web.validator.DomainLogic;
+import com.russell.test.redis.web.validator.UniqueEmail;
 
 public class UserSignUp implements User {
     
     @Email
+    @UniqueEmail(groups={DomainLogic.class})
 	private String email;  
 	private String username;
 	private String password;
@@ -39,5 +43,9 @@ public class UserSignUp implements User {
 	}
 	
 	
-	
+	@Override
+	public String toString() {
+        return new ToStringBuilder(this).append("email", email).append("username", username).append("email", password)
+                                        .append("email", password).toString();
+	}
 }

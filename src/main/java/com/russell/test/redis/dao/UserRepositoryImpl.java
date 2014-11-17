@@ -37,11 +37,17 @@ public class UserRepositoryImpl {
     }
     
     public ServiceUser findByEmail(String email) {
-    	String userId = (String) stringRedisTemplate.opsForHash().get(AppKey.users(), email);
+        if (email == null) {
+            return null;
+        }
+    	String userId = (String) stringRedisTemplate.opsForHash().get(AppKey.users(), email.toLowerCase());
         return findById(userId);
     }
 
     public ServiceUser findById(String id) {
+        if (id == null) {
+            return null;
+        }
     	ServiceUser user = (ServiceUser) redisTemplate.opsForHash().get(AppKey.user(), id);
         return user;
     }

@@ -9,7 +9,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.util.Assert;
 
 import com.russell.test.redis.bo.ServiceUser;
-import com.russell.test.redis.bo.UserImpl;
+import com.russell.test.redis.bo.ServiceUserImpl;
 import com.russell.test.redis.service.HelloService;
 import com.russell.test.redis.service.TService;
 
@@ -39,7 +39,7 @@ public class App {
     }
     
     public void saveUser() {
-        UserImpl user = new UserImpl();
+        ServiceUserImpl user = new ServiceUserImpl();
         user.setEmail("russellrc@gmail.com");
         user.setPassword("secret");
         user.setUsername("Krad");

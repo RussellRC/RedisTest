@@ -7,4 +7,5 @@ public interface ServiceUser extends User {
     
 	long getId();
     void setId(long id);
+    
 }

@@ -4,7 +4,9 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.russell.test.redis.app.User;
 import com.russell.test.redis.bo.ServiceUser;
+import com.russell.test.redis.bo.ServiceUserImpl;
 import com.russell.test.redis.dao.UserRepositoryImpl;
 
 @Service
@@ -14,8 +16,9 @@ public class TServiceImpl implements TService {
     private UserRepositoryImpl userRepository;
     
     @Override
-    public void save(ServiceUser user) {
-        userRepository.save(user);
+    public void save(User user) {
+        ServiceUser serviceUser = ServiceUserImpl.newServiceUser(user);
+        userRepository.save(serviceUser);
     }
 
     @Override

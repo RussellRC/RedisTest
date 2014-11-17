@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<bean:beans
+    xmlns:bean="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:c="http://www.springframework.org/schema/c"
+    xmlns="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <!-- Applies to root appContext beans only, for MVC Controllers is this 
+        declaration repeated in MVC config. Actually, we currently don't need this 
+        as we have on annotation outside of MVC. There is more here that can go wrong. 
+        If you use interface-based proxy (our demo uses CGLib), you may need to add 
+        proxy-target-class="true" as well. Book "Spring Security 3.1", Chapter 10, 
+        Fine-grained Access Control, from header "Method security on Spring MVC controllers" 
+        on discusses these topics. -->
+    <global-method-security secured-annotations="enabled" />
+
+    <bean:bean id="unauthorizedEntryPoint" class="com.russell.test.redis.security.UnauthorizedEntryPoint"/>
+    <bean:bean id="userDetailsService" class="com.russell.test.redis.service.UserDetailsServiceImpl"/>
+    <bean:bean id="tokenManager" class="com.russell.test.redis.security.impl.TokenManagerSingle"/>
+    
+    <authentication-manager id="restAuthenticationManager">
+        <authentication-provider user-service-ref="userDetailsService">
+            <!--
+            Default password encoder is PlaintextPasswordEncoder, which fits with our hardcoded users.
+            Obviously not a good choice otherwise.
+            -->
+        </authentication-provider>
+    </authentication-manager>
+    
+    <bean:bean
+        id="authenticationService"
+        class="com.russell.test.redis.security.impl.AuthenticationServiceDefault"
+        c:authenticationManager-ref="restAuthenticationManager"
+        c:tokenManager-ref="tokenManager" />
+
+    <bean:bean
+        id="tokenAuthenticationFilter"
+        class="com.russell.test.redis.security.impl.TokenAuthenticationFilter"
+        c:authenticationService-ref="authenticationService"
+        c:logoutLink="/logout" />
+
+    <bean:bean
+        id="loginUrlAuthenticationEntryPoint"
+        class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint"
+        c:loginFormUrl="/login" />
+    
+    <bean:bean
+        id="exceptionTranslatorFilter"
+        class="org.springframework.security.web.access.ExceptionTranslationFilter"
+        p:authenticationEntryPoint-ref="loginUrlAuthenticationEntryPoint" />
+    
+    <http
+        realm="Protected API"
+        use-expressions="true"
+        create-session="stateless"
+        entry-point-ref="unauthorizedEntryPoint"
+        authentication-manager-ref="restAuthenticationManager">
+
+        <!-- This is not easily possible, because it causes: DEBUG o.s.s.w.a.ExceptionTranslationFilter 
+            - Authentication exception occurred; redirecting to authentication entry 
+            point org.springframework.security.authentication.AuthenticationCredentialsNotFoundException: 
+            An Authentication object was not found in the SecurityContext -->
+        <!--<anonymous enabled="false"/> -->
+        <custom-filter ref="tokenAuthenticationFilter" position="FORM_LOGIN_FILTER" />
+
+        <intercept-url pattern="/*" access="permitAll" />
+        <intercept-url pattern="/secure/**" access="isFullyAuthenticated()" />
+    </http>
+
+
+</bean:beans>
